@@ -4,17 +4,30 @@ import { FaLongArrowAltRight } from "react-icons/fa";
 
 export const Home = () => {
   const [user, setUser] = useState([]);
-  const fetchData = () => {
-    fetch(
-      "https://newsapi.org/v2/everything?q=tesla&from=2024-09-08&sortBy=publishedAt&apiKey=18b561ca5f564d43b6fe6257838089bd"
-    )
-      .then((response) => response.json())
-      .then((data) => setUser(data));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "https://newsapi.org/v2/everything?q=tesla&from=2024-09-08&sortBy=publishedAt&apiKey=18b561ca5f564d43b6fe6257838089bd"
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setUser(data);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
   };
   useEffect(() => {
     document.title = "News Today | PranayGoud ";
     fetchData();
   }, []);
+  if (loading) return <p>Loading news...</p>;
+  if (error) return <p>Error fetching data: {error}</p>;
   return (
     <div>
       <div className="flex justify-center bg-slate-50 h-fit px-[40px] py-[60px] max-md:px-[20px] w-full">

@@ -4,30 +4,19 @@ import { FaLongArrowAltRight } from "react-icons/fa";
 
 export const Home = () => {
   const [user, setUser] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const fetchData = async () => {
-    try {
-      const response = await fetch(
-        "https://newsapi.org/v2/everything?q=tesla&from=2024-09-08&sortBy=publishedAt&apiKey=18b561ca5f564d43b6fe6257838089bd"
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setUser(data);
-      setLoading(false);
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
+
+  const fetchData = () => {
+    fetch(
+      "https://gnews.io/api/v4/top-headlines?category=general&lang=en&country=us&max=10&apikey=c881e3f00464299b65d148a1a01b2868"
+    )
+      .then((response) => response.json())
+      .then((data) => setUser(data));
   };
   useEffect(() => {
     document.title = "News Today | PranayGoud ";
     fetchData();
   }, []);
-  if (loading) return <p>Loading news...</p>;
-  if (error) return <p>Error fetching data: {error}</p>;
+
   return (
     <div>
       <div className="flex justify-center bg-slate-50 h-fit px-[40px] py-[60px] max-md:px-[20px] w-full">
@@ -40,7 +29,7 @@ export const Home = () => {
               {user.articles?.[0]?.title}
             </a>
             <h2 className="font-semibold text-2xl text-blue-600 max-md:text-base">
-              {user.articles?.[0].author}
+              {user.articles?.[0].source.name}
             </h2>
             <p className="max-md:text-xs">{user.articles?.[0]?.description}</p>
             <a
@@ -56,7 +45,7 @@ export const Home = () => {
           </div>
           <div className="w-[40%] max-md:hidden">
             <img
-              src={user.articles?.[0]?.urlToImage}
+              src={user.articles?.[0]?.image}
               className="w-full h-full object-cover rounded-3xl"
               alt={user.articles?.[0]?.title}
             />
@@ -73,7 +62,7 @@ export const Home = () => {
               <li className="h-fit rounded-3xl shadow-xl bg-white" key={index}>
                 <div className="px-10 pt-10 h-[250px]">
                   <img
-                    src={article.urlToImage}
+                    src={article.image}
                     className="h-full w-full object-cover rounded-3xl"
                     alt="News Thumbnail"
                   />

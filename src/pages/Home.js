@@ -6,7 +6,7 @@ export const Home = () => {
   const [user, setUser] = useState([]);
   const fetchData = () => {
     fetch(
-      "https://newsapi.org/v2/everything?q=tesla&from=2024-09-08&sortBy=publishedAt&apiKey=33a6eceaa9e149f29d027e870ff25961"
+      "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=33a6eceaa9e149f29d027e870ff25961"
     )
       .then((response) => response.json())
       .then((data) => setUser(data));
